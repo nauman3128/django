@@ -495,6 +495,10 @@ def slugify(value, allow_unicode=False):
     """
     value = str(value)
     if allow_unicode:
+        # Avoid slow NFKC normalization on Windows for very long strings.
+        # URL slugs are typically much shorter than 200 characters.
+        if len(value) > 200:
+            value = value[:200]
         value = unicodedata.normalize("NFKC", value)
     else:
         value = (

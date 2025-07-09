@@ -160,8 +160,10 @@ class AbstractBaseUser(models.Model):
 
     @classmethod
     def normalize_username(cls, username):
-        return (
-            unicodedata.normalize("NFKC", username)
-            if isinstance(username, str)
-            else username
-        )
+        if not isinstance(username, str):
+            return username
+        # Avoid slow NFKC normalization on Windows for very long strings.
+        # Most systems limit usernames to 150 characters or less.
+        if len(username) > 150:
+            return username
+        return unicodedata.normalize("NFKC", username)

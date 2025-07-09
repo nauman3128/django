@@ -26,6 +26,10 @@ def _unicode_ci_compare(s1, s2):
     recommended algorithm from Unicode Technical Report 36, section
     2.11.2(B)(2).
     """
+    # Avoid slow NFKC normalization on Windows for very long strings.
+    # Email addresses are limited to 320 characters per RFC 5321.
+    if len(s1) > 320 or len(s2) > 320:
+        return False
     return (
         unicodedata.normalize("NFKC", s1).casefold()
         == unicodedata.normalize("NFKC", s2).casefold()

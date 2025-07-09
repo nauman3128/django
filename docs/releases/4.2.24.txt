@@ -1,0 +1,28 @@
+===========================
+Django 4.2.24 release notes
+===========================
+
+*July 9, 2025*
+
+Django 4.2.24 fixes a security issue with 4.2.23.
+
+CVE-2025-27556: Potential denial-of-service vulnerability in NFKC normalization on Windows
+===========================================================================================
+
+Python's :func:`NFKC normalization <python:unicodedata.normalize>` is slow on
+Windows when processing very long Unicode strings. As a consequence, several
+Django functions that perform NFKC normalization were subject to potential
+denial-of-service attacks via certain inputs with a very large number of Unicode
+characters.
+
+The affected functions have been updated to include length checks before
+performing normalization:
+
+* :func:`~django.contrib.auth.forms._unicode_ci_compare` - now limits input to 320 characters (RFC 5321 email limit)
+* :meth:`~django.contrib.auth.base_user.AbstractBaseUser.normalize_username` - now limits input to 150 characters
+* :func:`~django.utils.text.slugify` - now truncates input to 200 characters when ``allow_unicode=True``
+
+This affects authentication views like :class:`~django.contrib.auth.views.LoginView` 
+and :class:`~django.contrib.auth.views.LogoutView` which process user input that
+may be normalized, as well as the :func:`~django.views.i18n.set_language` view
+which processes language codes that may be used in URL slugs. 
