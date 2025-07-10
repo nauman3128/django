@@ -18,8 +18,8 @@ characters.
 The affected functions have been updated to include length checks before
 performing normalization:
 
-* :func:`~django.contrib.auth.forms._unicode_ci_compare` - now limits input to 320 characters (RFC 5321 email limit)
-* :meth:`~django.contrib.auth.base_user.AbstractBaseUser.normalize_username` - now limits input to 150 characters
+* ``django.contrib.auth.forms._unicode_ci_compare`` - now limits input to 320 characters (RFC 5321 email limit)
+* ``django.contrib.auth.base_user.AbstractBaseUser.normalize_username`` - now limits input to 150 characters
 * :func:`~django.utils.text.slugify` - now truncates input to 200 characters when ``allow_unicode=True``
 
 This affects authentication views like :class:`~django.contrib.auth.views.LoginView` 
